@@ -1,4 +1,5 @@
 using GymManagementDAL.Data.Contexts;
+using GymManagementDAL.Repositories.Classes;
 using Microsoft.EntityFrameworkCore;
 
 namespace GymManagementPL
@@ -16,6 +17,8 @@ namespace GymManagementPL
             builder.Services.AddDbContext<GymDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
             );
+
+            
 
             var app = builder.Build();
 
