@@ -11,13 +11,19 @@ namespace GymManagementDAL.Data.Contexts
 {
     public class GymDbContext : DbContext
     {
-        //public GymDbContext(DbContextOptions<GymDbContext> options) : base(options)
-        //{
-            
-        //}
+        
+        public GymDbContext(DbContextOptions<GymDbContext> options)
+        : base(options)
+        {
+        }
         override protected void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            modelBuilder.Entity<Booking>()
+            .HasOne(b => b.Session)
+            .WithMany(s => s.SessionMembers)
+            .HasForeignKey(b => b.SessionId)
+            .OnDelete(DeleteBehavior.Restrict);
         }
 
         #region DbSets

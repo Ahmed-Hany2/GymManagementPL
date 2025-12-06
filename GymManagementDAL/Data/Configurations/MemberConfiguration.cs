@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace GymManagementDAL.Data.Configurations
 {
-    public class MemberConfiguration : IEntityTypeConfiguration<Member>
+    public class MemberConfiguration : GymUserConfiguration<Member> , IEntityTypeConfiguration<Member>
     {
-        public void Configure(EntityTypeBuilder<Member> builder)
+        public new void Configure(EntityTypeBuilder<Member> builder)
         {
             builder.Property(x=> x.CreatedAt)
                 .HasColumnName("joinDate")
@@ -19,7 +19,10 @@ namespace GymManagementDAL.Data.Configurations
             builder.HasOne(x => x.HealthRecord)
                 .WithOne()
                 .HasForeignKey<HealthRecord>(x => x.Id);
-                
+
+
+            base.Configure(builder);
+
         }
     
     }
