@@ -13,9 +13,18 @@ namespace GymManagementBLL.Services.Classes
     public class MemberService : IMemberService
     {
         private readonly IGenericRepositories<Member> _memberRepository;
-        public MemberService(IGenericRepositories<Member> memberRepository)
+        private readonly IGenericRepositories<Membership> _membershipRepository;
+        private readonly IGenericRepositories<Plan> _planRepository;
+
+        public MemberService(
+            IGenericRepositories<Member> memberRepository,
+            IGenericRepositories<Membership> membershipRepository,
+            IGenericRepositories<Plan> planRepository
+            )
         {
             _memberRepository = memberRepository;
+            _membershipRepository = membershipRepository;
+            _planRepository= planRepository;
         }
 
 
@@ -77,6 +86,36 @@ namespace GymManagementBLL.Services.Classes
                 return false;
             }
         }
+
+        public MemberViewModel? GetMemberDetails(int memberId)
+        {
+            var member = _memberRepository.GetById(memberId);
+            if (member == null) return null;
+            var memberViewModel = new MemberViewModel
+            {
+                Name = member.Name,
+                Id = member.Id,
+                Photo = member.Photo,
+                Email = member.Email,
+                Phone = member.Phone,
+                DateOfBirth = member.DateOfBirth.ToShortDateString(),
+                Gender = member.Gender.ToString(),
+                Address = FormatAddress(member.Address),
+            };
+            var activeMembership = _membershipRepository
+                .GetAll(m => m.MemberId == memberId && m.Status=="Active")
+                .FirstOrDefault();
+
+            if (activeMembership != null)
+            {
+                var activePlan = _planRepository.GetById(activeMembership.PlanId);
+                memberViewModel.PlanName = activePlan?.Name;
+                memberViewModel.MembershipStartDate = activeMembership.CreatedAt.ToShortDateString();
+                memberViewModel.MembershipEndDate = activeMembership.EndDate.ToShortDateString();
+            }
+            return memberViewModel;
+        }
+
         #region Helper Methods
         private string FormatAddress(Address address)
         {
@@ -96,6 +135,8 @@ namespace GymManagementBLL.Services.Classes
             var existingMember = _memberRepository.GetAll(m => m.Phone == phone);
             return existingMember is not null && existingMember.Any();
         }
+
+        
         #endregion
     }
 }
