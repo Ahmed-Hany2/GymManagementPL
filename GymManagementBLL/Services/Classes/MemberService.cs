@@ -15,16 +15,19 @@ namespace GymManagementBLL.Services.Classes
         private readonly IGenericRepositories<Member> _memberRepository;
         private readonly IGenericRepositories<Membership> _membershipRepository;
         private readonly IGenericRepositories<Plan> _planRepository;
+        private readonly IGenericRepositories<HealthRecord> _healthRecordRepository;
 
         public MemberService(
             IGenericRepositories<Member> memberRepository,
             IGenericRepositories<Membership> membershipRepository,
-            IGenericRepositories<Plan> planRepository
+            IGenericRepositories<Plan> planRepository,
+            IGenericRepositories<HealthRecord> healthRecordRepository
             )
         {
             _memberRepository = memberRepository;
             _membershipRepository = membershipRepository;
             _planRepository= planRepository;
+            _healthRecordRepository = healthRecordRepository;
         }
 
 
@@ -116,6 +119,20 @@ namespace GymManagementBLL.Services.Classes
             return memberViewModel;
         }
 
+        public HealthRecordViewModel? GetMemberHealthRecord(int memberId)
+        {
+            var memberHealthRecord = _healthRecordRepository.GetById(memberId);
+            if (memberHealthRecord == null) return null;
+
+            return new HealthRecordViewModel
+            {
+                Height = memberHealthRecord.Height ,
+                Weight = memberHealthRecord.Weight ,
+                BloodType = memberHealthRecord.BloodType ,
+                Note = memberHealthRecord.Note
+            };
+        }
+
         #region Helper Methods
         private string FormatAddress(Address address)
         {
@@ -137,6 +154,8 @@ namespace GymManagementBLL.Services.Classes
         }
 
         
+
+
         #endregion
     }
 }
