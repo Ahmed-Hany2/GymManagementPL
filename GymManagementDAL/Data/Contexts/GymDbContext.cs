@@ -11,14 +11,13 @@ namespace GymManagementDAL.Data.Contexts
 {
     public class GymDbContext : DbContext
     {
-        public GymDbContext(DbContextOptions<GymDbContext> options) : base(options)
-        {
+        //public GymDbContext(DbContextOptions<GymDbContext> options) : base(options)
+        //{
             
-        }
+        //}
         override protected void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-            base.OnModelCreating(modelBuilder);
         }
 
         #region DbSets
