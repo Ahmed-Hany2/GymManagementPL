@@ -13,5 +13,6 @@ namespace GymManagementDAL.Entities
         public decimal Price { get; set; }
         public int DurationDays { get; set; }
         public bool IsActive { get; set; }
+        public ICollection<Membership> PlanMembers { get; set; }
     }
 }
