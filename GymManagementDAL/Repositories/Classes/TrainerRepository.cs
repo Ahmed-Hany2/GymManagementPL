@@ -11,7 +11,12 @@ namespace GymManagementDAL.Repositories.Classes
 {
     public class TrainerRepository : ITrainerRepository
     {
-        GymDbContext _context = new GymDbContext();
+        private readonly GymDbContext _context ;
+
+        public TrainerRepository(GymDbContext context)
+        {
+            _context = context;
+        }
         public int Add(Trainer trainer)
         {
             _context.Trainers.Add(trainer);
