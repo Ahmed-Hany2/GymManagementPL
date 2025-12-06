@@ -17,6 +17,8 @@ namespace GymManagementBLL.Services.Classes
         {
             _memberRepository = memberRepository;
         }
+
+
         public IEnumerable<MemberViewModel> GetAllMembers()
         {
             var members = _memberRepository.GetAll().ToList() ?? [];
@@ -39,12 +41,60 @@ namespace GymManagementBLL.Services.Classes
 
             return memberViewModels;
         }
+
+        public bool CreateMember(CreateMemberViewModel model)
+        {
+            try
+            {
+                if (IsEmailExists(model.Email) || IsPhoneExists(model.Phone))
+                    return false;
+                var member = new Member
+                {
+                    Name = model.Name,
+                    Email = model.Email,
+                    Phone = model.Phone,
+                    DateOfBirth = model.DateOfBirth,
+                    Gender = model.Gender,
+                    Address = new Address
+                    {
+                        BuildingNumber = model.BuildingNumber,
+                        City = model.City,
+                        Street = model.Street
+                    },
+                    HealthRecord = new HealthRecord
+                    {
+                        Height = model.HealthRecordViewModel?.Height ?? 0,
+                        Weight = model.HealthRecordViewModel?.Weight ?? 0,
+                        BloodType = model.HealthRecordViewModel?.BloodType ?? null,
+                        Note = model.HealthRecordViewModel?.Note ?? null
+                    }
+                };
+                _memberRepository.Add(member);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
         #region Helper Methods
         private string FormatAddress(Address address)
         {
             if (address is null)
                 return "N/A";
             return $"{address.BuildingNumber}, {address.Street}, {address.City}";
+        }
+
+        private bool IsEmailExists(string email)
+        {
+            var existingMember = _memberRepository.GetAll(m => m.Email.ToLower() == email.ToLower());
+            return existingMember is not null && existingMember.Any();
+        }
+
+        private bool IsPhoneExists(string phone)
+        {
+            var existingMember = _memberRepository.GetAll(m => m.Phone == phone);
+            return existingMember is not null && existingMember.Any();
         }
         #endregion
     }
