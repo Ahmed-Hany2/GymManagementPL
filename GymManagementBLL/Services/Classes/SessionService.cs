@@ -80,6 +80,27 @@ namespace GymManagementBLL.Services.Classes
             return true;
         }
 
+        public bool RemoveSession(int sessionId)
+        {
+            var session = _unitOfWork.GetRepository<Session>().GetById(sessionId);
+            if (!IsSessionAvailableForRemove(session))
+                return false;
+
+           
+            _unitOfWork.GetRepository<Session>().Delete(session);
+            _unitOfWork.SaveChanges();
+            return true;
+
+        }
+
+        public UpdateSessionViewModel? GetSessionToUpdate(int sessionId)
+        {
+            var session = _unitOfWork.GetRepository<Session>().GetById(sessionId);
+            if (session == null)
+                return null;
+           return _mapper.Map<UpdateSessionViewModel>(session);
+        }
+
         #region Helper Methods
 
         private bool IsTrainerExists(int trainerId)
@@ -108,6 +129,22 @@ namespace GymManagementBLL.Services.Classes
 
             return true;
         }
+
+        private bool IsSessionAvailableForRemove(Session session)
+        {
+            if (session == null || 
+                session.StartDate > DateTime.Now ||
+                (session.StartDate <= DateTime.Now && session.EndDate > DateTime.Now) 
+                )
+                return false;
+
+            var hasActiveBookings = _unitOfWork.sessionRepository.GetCountOfBookedSlots(session.Id) > 0;
+            if (hasActiveBookings)
+                return false;
+
+            return true;
+        }
+
         #endregion
     }
 }
