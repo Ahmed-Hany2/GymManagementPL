@@ -13,13 +13,13 @@ namespace GymManagementDAL.Repositories.Classes
     {
         private readonly GymDbContext _context;
         private readonly Dictionary<string, object> repositories = [];
-        public ISessionRepository sessionRepository { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public ISessionRepository sessionRepository { get ; set ; }
 
         public UnitOfWork(GymDbContext context, ISessionRepository sessionRepository)
         {
             
             _context = context;
-            SessionRepository = sessionRepository;
+            this.sessionRepository = sessionRepository;
         }
 
        

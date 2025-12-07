@@ -37,5 +37,19 @@ namespace GymManagementBLL.Services.Classes
             }
             return mapedSessions;
         }
+
+        public SessionViewModel? GetSessionById(int sessionId)
+        {
+            var session = _unitOfWork.sessionRepository.GetSessionWithTrainerAndCategory(sessionId);
+
+            if (session == null)
+                return null;
+            var mapedSession = _mapper.Map <Session, SessionViewModel> (session);
+
+
+            mapedSession.AvailableSlots = session.Capacity - _unitOfWork.sessionRepository.GetCountOfBookedSlots(session.Id);
+            
+            return mapedSession;
+        }
     }
 }

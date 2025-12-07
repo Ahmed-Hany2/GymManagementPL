@@ -12,6 +12,7 @@ namespace GymManagementDAL.Repositories.Interfaces
         Session? GetById(int id);
         IEnumerable<Session> GetAll();
         IEnumerable<Session> GetAllSessionsWithTrainerAndCategory();
+        Session GetSessionWithTrainerAndCategory(int sessionId);
         int Add(Session session);
         int Update(Session session);
         int Delete(int id);

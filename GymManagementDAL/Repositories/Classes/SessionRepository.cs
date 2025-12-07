@@ -61,6 +61,14 @@ namespace GymManagementDAL.Repositories.Classes
             return _context.Bookings.Where(x => x.SessionId == sessionId).Count();
         }
 
+        public Session GetSessionWithTrainerAndCategory(int sessionId)
+        {
+            return _context.Sessions
+               .Include(s => s.Trainer)
+               .Include(s => s.Category)
+               .FirstOrDefault(x=> x.Id == sessionId);
+        }
+
         public int Update(Session session)
         {
             _context.Update(session);
