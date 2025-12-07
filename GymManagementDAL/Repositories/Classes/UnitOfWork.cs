@@ -13,12 +13,17 @@ namespace GymManagementDAL.Repositories.Classes
     {
         private readonly GymDbContext _context;
         private readonly Dictionary<string, object> repositories = [];
+        public ISessionRepository sessionRepository { get ; set ; }
 
-        public UnitOfWork(GymDbContext context)
+        public UnitOfWork(GymDbContext context, ISessionRepository sessionRepository)
         {
             
             _context = context;
+            this.sessionRepository = sessionRepository;
         }
+
+       
+
         public IGenericRepositories<TEntity> GetRepository<TEntity>() where TEntity : BaseEntity
         {
             var entityName = typeof(TEntity).Name;
@@ -31,6 +36,6 @@ namespace GymManagementDAL.Repositories.Classes
 
         }
 
-        public int saveChanges() => _context.SaveChanges();
+        public int SaveChanges() => _context.SaveChanges();
     }
 }
