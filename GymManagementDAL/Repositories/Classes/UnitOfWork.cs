@@ -31,6 +31,6 @@ namespace GymManagementDAL.Repositories.Classes
 
         }
 
-        public int saveChanges() => _context.SaveChanges();
+        public int SaveChanges() => _context.SaveChanges();
     }
 }
