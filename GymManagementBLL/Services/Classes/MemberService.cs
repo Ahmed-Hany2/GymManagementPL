@@ -30,30 +30,6 @@ namespace GymManagementBLL.Services.Classes
             _healthRecordRepository = healthRecordRepository;
         }
 
-
-        public IEnumerable<MemberViewModel> GetAllMembers()
-        {
-            var members = _memberRepository.GetAll().ToList() ?? [];
-            if( members is null || !members.Any() )
-                return [];
-            var memberViewModels = members.Select(x => new MemberViewModel
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Photo = x.Photo,
-                Email = x.Email,
-                Phone = x.Phone,
-                DateOfBirth = x.DateOfBirth.ToShortDateString(),
-                Gender= x.Gender.ToString(),
-                //Address = FormatAddress(x.Address),
-                //PlanName = x.MemberPlans?.FirstOrDefault()?.Plan?.Name,
-                //MembershipStartDate = x.MemberPlans?.FirstOrDefault()?.CreatedAt.ToShortDateString(),
-                //MembershipEndDate = x.MemberPlans?.FirstOrDefault()?.EndDate.ToShortDateString()
-            });
-
-            return memberViewModels;
-        }
-
         public bool CreateMember(CreateMemberViewModel model)
         {
             try
@@ -66,6 +42,7 @@ namespace GymManagementBLL.Services.Classes
                     Email = model.Email,
                     Phone = model.Phone,
                     DateOfBirth = model.DateOfBirth,
+                    
                     Gender = model.Gender,
                     Address = new Address
                     {
@@ -88,6 +65,59 @@ namespace GymManagementBLL.Services.Classes
             {
                 return false;
             }
+        }
+        public bool UpdateMemberDetails(int memberId, MemberToUpdateViewModel model)
+        {
+            var member = _memberRepository.GetById(memberId);
+            if (member == null || IsEmailExists(model.Email) || IsPhoneExists(model.Phone))
+                return false;
+            model.Email = model.Email;
+            model.Phone = model.Phone;
+            model.BuildingNumber= model.BuildingNumber;
+            model.City= model.City;
+            model.Street= model.Street;
+           
+            _memberRepository.Update(member);
+            return true;
+
+        }
+        public MemberToUpdateViewModel? GetMemberToUpdate(int memberId)
+        {
+            var member = _memberRepository.GetById(memberId);
+            if (member == null) return null;
+            var memberToUpdateViewModel = new MemberToUpdateViewModel
+            {
+                Name = member.Name,
+                Photo = member.Photo,
+                Email = member.Email,
+                Phone = member.Phone,
+                BuildingNumber = member.Address.BuildingNumber,
+                City = member.Address.City,
+                Street = member.Address.Street,
+            };
+            return memberToUpdateViewModel;
+        }
+        public IEnumerable<MemberViewModel> GetAllMembers()
+        {
+            var members = _memberRepository.GetAll().ToList() ?? [];
+            if( members is null || !members.Any() )
+                return [];
+            var memberViewModels = members.Select(x => new MemberViewModel
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Photo = x.Photo,
+                Email = x.Email,
+                Phone = x.Phone,
+                DateOfBirth = x.DateOfBirth.ToShortDateString(),
+                Gender= x.Gender.ToString(),
+                //Address = FormatAddress(x.Address),
+                //PlanName = x.MemberPlans?.FirstOrDefault()?.Plan?.Name,
+                //MembershipStartDate = x.MemberPlans?.FirstOrDefault()?.CreatedAt.ToShortDateString(),
+                //MembershipEndDate = x.MemberPlans?.FirstOrDefault()?.EndDate.ToShortDateString()
+            });
+
+            return memberViewModels;
         }
 
         public MemberViewModel? GetMemberDetails(int memberId)
@@ -152,10 +182,6 @@ namespace GymManagementBLL.Services.Classes
             var existingMember = _memberRepository.GetAll(m => m.Phone == phone);
             return existingMember is not null && existingMember.Any();
         }
-
-        
-
-
         #endregion
     }
 }
