@@ -64,6 +64,21 @@ namespace GymManagementBLL.Services.Classes
             return mapedSession;
         }
 
+        public bool UpdateSession(int sessionId, UpdateSessionViewModel input)
+        {
+            var session = _unitOfWork.GetRepository<Session>().GetById(sessionId);
+            if (!IsSessionAvailableForUpdate(session) || 
+                !IsTrainerExists(input.TrainerId) || 
+                !IsValidDateRange(input.StartDate, input.EndDate)
+                )
+                return false;
+
+            _mapper.Map<Session>(input);
+            session.UpdatedAt = DateTime.Now;
+            _unitOfWork.GetRepository<Session>().Update(session);
+            _unitOfWork.SaveChanges();
+            return true;
+        }
 
         #region Helper Methods
 
@@ -80,6 +95,18 @@ namespace GymManagementBLL.Services.Classes
         private bool IsValidDateRange(DateTime startDate, DateTime endDate)
         {
             return startDate < endDate && startDate >= DateTime.Now;
+        }
+
+        private bool IsSessionAvailableForUpdate(Session session)
+        {
+            if (session == null || session.EndDate < DateTime.Now || session.StartDate <= DateTime.Now)
+                return false;
+
+            var hasActiveBookings = _unitOfWork.sessionRepository.GetCountOfBookedSlots(session.Id) > 0;
+            if (hasActiveBookings)
+                return false;
+
+            return true;
         }
         #endregion
     }

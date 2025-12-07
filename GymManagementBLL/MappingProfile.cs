@@ -24,6 +24,7 @@ namespace GymManagementBLL
                 .ForMember(dest => dest.AvailableSlots, opt => opt.Ignore() );
 
             CreateMap<CreateSessionViewModel, Session>();
+            CreateMap<UpdateSessionViewModel, Session>();
         }
     }
 }
