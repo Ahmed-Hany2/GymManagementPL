@@ -16,18 +16,21 @@ namespace GymManagementBLL.Services.Classes
         private readonly IGenericRepositories<Membership> _membershipRepository;
         private readonly IGenericRepositories<Plan> _planRepository;
         private readonly IGenericRepositories<HealthRecord> _healthRecordRepository;
+        private readonly IGenericRepositories<Booking> _bookingRepository;
 
         public MemberService(
             IGenericRepositories<Member> memberRepository,
             IGenericRepositories<Membership> membershipRepository,
             IGenericRepositories<Plan> planRepository,
-            IGenericRepositories<HealthRecord> healthRecordRepository
+            IGenericRepositories<HealthRecord> healthRecordRepository,
+            IGenericRepositories<Booking> bookingRepository
             )
         {
             _memberRepository = memberRepository;
             _membershipRepository = membershipRepository;
             _planRepository= planRepository;
             _healthRecordRepository = healthRecordRepository;
+            _bookingRepository = bookingRepository;
         }
 
         public bool CreateMember(CreateMemberViewModel model)
@@ -96,6 +99,32 @@ namespace GymManagementBLL.Services.Classes
                 Street = member.Address.Street,
             };
             return memberToUpdateViewModel;
+        }
+
+        public bool RemoveMember(int memberId)
+        {
+            var member = _memberRepository.GetById(memberId);
+            if (member == null)
+                return false;
+            var activeBookings = _bookingRepository
+                .GetAll(x => x.MemberId == memberId && x.Session.StartDate > DateTime.Now);
+            if (activeBookings.Any())
+                return false;
+            var memberships = _membershipRepository
+                .GetAll(x => x.MemberId == memberId).ToList();
+
+            try { 
+                if(memberships.Any())
+                {
+                    memberships.ForEach(x => _membershipRepository.Delete(x));
+                }
+                _memberRepository.Delete(member);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
         public IEnumerable<MemberViewModel> GetAllMembers()
         {
