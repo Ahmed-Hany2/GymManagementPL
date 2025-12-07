@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace GymManagementDAL.Repositories.Interfaces
 {
-    public interface IMemberRepository :IGenericRepositories<Member>
+    public interface IUnitOfWork
     {
-        IEnumerable<Session> GetAllSessions(int memberId);
+        IGenericRepositories<TEntity> GetRepository<TEntity>() where TEntity : BaseEntity;
+        int saveChanges();
     }
 }
