@@ -21,6 +21,18 @@ namespace GymManagementBLL.Services.Classes
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+
+        public bool CreateSession(CreateSessionViewModel input)
+        {
+            if(!IsTrainerExists(input.TrainerId) || !IsCategoryExists(input.CategoryId) || !IsValidDateRange( input.StartDate, input.EndDate))
+                return false;
+
+            var session = _mapper.Map<CreateSessionViewModel, Session>(input);
+            _unitOfWork.GetRepository<Session>().Add(session);
+            _unitOfWork.SaveChanges();
+            return true;
+        }
+
         public IEnumerable<SessionViewModel> GetAllSessions()
         {
             var sessions = _unitOfWork.sessionRepository.GetAllSessionsWithTrainerAndCategory()
@@ -51,5 +63,24 @@ namespace GymManagementBLL.Services.Classes
             
             return mapedSession;
         }
+
+
+        #region Helper Methods
+
+        private bool IsTrainerExists(int trainerId)
+        {
+            var trainer = _unitOfWork.GetRepository<Trainer>().GetById(trainerId);
+            return trainer != null;
+        }
+        private bool IsCategoryExists(int categoryId)
+        {
+            var category = _unitOfWork.GetRepository<Category>().GetById(categoryId);
+            return category != null;
+        }
+        private bool IsValidDateRange(DateTime startDate, DateTime endDate)
+        {
+            return startDate < endDate && startDate >= DateTime.Now;
+        }
+        #endregion
     }
 }
