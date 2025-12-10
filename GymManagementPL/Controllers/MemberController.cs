@@ -16,5 +16,15 @@ namespace GymManagementPL.Controllers
             var members = _memberService.GetAllMembers();
             return View(members);
         }
+
+        public IActionResult MemberDetails(int id) 
+        {
+            var member = _memberService.GetMemberDetails(id);
+            if (member == null)
+            
+                return RedirectToAction(nameof(Index));
+           
+            return View(member);
+        }
     }
 }
