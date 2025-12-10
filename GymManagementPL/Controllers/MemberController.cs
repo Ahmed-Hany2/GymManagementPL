@@ -1,4 +1,5 @@
 ﻿using GymManagementBLL.Services.Interfaces;
+using GymManagementBLL.ViewModels.MemberViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GymManagementPL.Controllers
@@ -41,6 +42,30 @@ namespace GymManagementPL.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(healthRecord);
+        }
+
+        public IActionResult Create() 
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult CreateMember(CreateMemberViewModel input) 
+        {
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("Data Missed", "check missing data");
+                return View(nameof(Create),input);
+            }
+            bool result =  _memberService.CreateMember(input);
+            if (result)
+                TempData["SuccessMessage"] = "Member created successfully.";
+            else
+                TempData["ErrorMessage"] = "Failed to create member! Phone number or email already exist!";
+
+            return RedirectToAction(nameof(Index));
+
+
         }
     }
 }
