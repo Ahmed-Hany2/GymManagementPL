@@ -93,5 +93,32 @@ namespace GymManagementPL.Controllers
             return RedirectToAction(nameof(Index));
 
         }
-    }
+
+        public IActionResult Delete([FromRoute] int id) 
+        {
+            if(id <= 0)
+            {
+                TempData["ErrorMessage"] = "Invalid Member Id.";
+                return RedirectToAction(nameof(Index));
+            }
+            var member = _memberService.GetMemberDetails(id);
+            if (member == null)
+            {
+                TempData["ErrorMessage"] = "Member not found.";
+                return RedirectToAction(nameof(Index));
+            }
+            ViewBag.MemberId = id;  
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult DeleteConfirmed([FromRoute] int id) 
+        {
+            var result = _memberService.RemoveMember(id);
+            if (result)
+                TempData["SuccessMessage"] = "Member Deleted Successfully.";
+            else
+                TempData["ErrorMessage"] = "Failed to delete member!";
+            return RedirectToAction(nameof(Index));
+        }
 }
