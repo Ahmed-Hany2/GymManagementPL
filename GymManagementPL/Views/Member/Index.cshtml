@@ -1,6 +1,43 @@
 ﻿@model IEnumerable<MemberViewModel>
-
-
+@* @if(ViewBag.Message != null)
+{
+    <div>
+        @ViewBag.Message
+    </div>
+}
+else
+{
+    <div>
+        Not Appeared Here!
+    </div>
+}
+@if ( ViewData["Welcome"] != null )
+{
+    <div>
+        @ViewData["Welcome"]
+    </div>
+}
+else
+{
+    <div>
+        Not Appeared Here!
+    </div>
+} *@
+@if(TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+else if(TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+)
 <div class="container">
     <header class="d-flex justify-content-end mt-5 mb-4 align-items-center">
         <a href="\Member\Create" class="btn btn-fill fw-medium rounded-pill px-3 py-3">
