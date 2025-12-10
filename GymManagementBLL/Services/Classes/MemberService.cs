@@ -59,8 +59,17 @@ namespace GymManagementBLL.Services.Classes
         public bool UpdateMemberDetails(int memberId, MemberToUpdateViewModel model)
         {
             var member = _unitOfWork.GetRepository<Member>().GetById(memberId);
-            if (member == null || IsEmailExists(model.Email) || IsPhoneExists(model.Phone))
+            if (member == null )
                 return false;
+
+            var emailExist = _unitOfWork.GetRepository<Member>()
+                .GetAll(m => m.Email.ToLower() == model.Email.ToLower() && m.Id != memberId);
+
+            var phoneExist = _unitOfWork.GetRepository<Member>()
+                .GetAll(m => m.Phone == model.Phone && m.Id != memberId);
+            if (emailExist.Any() || phoneExist.Any())
+                return false;
+
             model.Email = model.Email;
             model.Phone = model.Phone;
             model.BuildingNumber= model.BuildingNumber;
@@ -176,6 +185,8 @@ namespace GymManagementBLL.Services.Classes
                 Note = memberHealthRecord.Note
             };
         }
+
+
 
         #region Helper Methods
         private string FormatAddress(Address address)

@@ -65,6 +65,32 @@ namespace GymManagementPL.Controllers
 
             return RedirectToAction(nameof(Index));
 
+        }
+
+        public IActionResult MemberEdit(int id) 
+        {
+            var member = _memberService.GetMemberToUpdate(id);
+            if (member == null)
+            {
+                TempData["ErrorMessage"] = "Member not found.";
+                return RedirectToAction(nameof(Index));
+            }
+            return View(member);
+        }
+
+        public IActionResult MemberEdit( [FromRoute]int id ,MemberToUpdateViewModel input )
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(input);
+            }
+            bool result = _memberService.UpdateMemberDetails(id, input);
+            if (result)
+                TempData["SuccessMessage"] = "Member Updted Successfully.";
+            else
+                TempData["ErrorMessage"] = "Failed to update member!";
+
+            return RedirectToAction(nameof(Index));
 
         }
     }
