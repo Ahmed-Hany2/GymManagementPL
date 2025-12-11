@@ -7,6 +7,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Views\Plan\Details.cshtml" />
+    <Content Remove="Views\Plan\Edit.cshtml" />
+    <Content Remove="Views\Session\Create.cshtml" />
+    <Content Remove="Views\Session\Delete.cshtml" />
+    <Content Remove="Views\Session\Details.cshtml" />
+    <Content Remove="Views\Session\Edit.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Plan\Details.cshtml" />
+    <None Include="Views\Plan\Edit.cshtml" />
+    <None Include="Views\Session\Create.cshtml" />
+    <None Include="Views\Session\Delete.cshtml" />
+    <None Include="Views\Session\Details.cshtml" />
+    <None Include="Views\Session\Edit.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.9">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

@@ -21,7 +21,7 @@ namespace GymManagementPL.Controllers
             return View(members);
         }
 
-        public IActionResult MemberDetails(int id) 
+        public IActionResult MemberDetails(int id)
         {
             var member = _memberService.GetMemberDetails(id);
             if (member == null)
@@ -29,7 +29,7 @@ namespace GymManagementPL.Controllers
                 TempData["ErrorMessage"] = "Member not found.";
                 return RedirectToAction(nameof(Index));
             }
-           
+
             return View(member);
         }
 
@@ -44,20 +44,20 @@ namespace GymManagementPL.Controllers
             return View(healthRecord);
         }
 
-        public IActionResult Create() 
+        public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult CreateMember(CreateMemberViewModel input) 
+        public IActionResult CreateMember(CreateMemberViewModel input)
         {
             if (!ModelState.IsValid)
             {
                 ModelState.AddModelError("Data Missed", "check missing data");
-                return View(nameof(Create),input);
+                return View(nameof(Create), input);
             }
-            bool result =  _memberService.CreateMember(input);
+            bool result = _memberService.CreateMember(input);
             if (result)
                 TempData["SuccessMessage"] = "Member created successfully.";
             else
@@ -67,7 +67,7 @@ namespace GymManagementPL.Controllers
 
         }
 
-        public IActionResult MemberEdit(int id) 
+        public IActionResult MemberEdit(int id)
         {
             var member = _memberService.GetMemberToUpdate(id);
             if (member == null)
@@ -78,7 +78,7 @@ namespace GymManagementPL.Controllers
             return View(member);
         }
 
-        public IActionResult MemberEdit( [FromRoute]int id ,MemberToUpdateViewModel input )
+        public IActionResult MemberEdit([FromRoute] int id, MemberToUpdateViewModel input)
         {
             if (!ModelState.IsValid)
             {
@@ -94,9 +94,10 @@ namespace GymManagementPL.Controllers
 
         }
 
-        public IActionResult Delete([FromRoute] int id) 
+      
+        public IActionResult Delete([FromRoute] int id)
         {
-            if(id <= 0)
+            if (id <= 0)
             {
                 TempData["ErrorMessage"] = "Invalid Member Id.";
                 return RedirectToAction(nameof(Index));
@@ -107,12 +108,12 @@ namespace GymManagementPL.Controllers
                 TempData["ErrorMessage"] = "Member not found.";
                 return RedirectToAction(nameof(Index));
             }
-            ViewBag.MemberId = id;  
+            ViewBag.MemberId = id;
             return View();
         }
 
         [HttpPost]
-        public IActionResult DeleteConfirmed([FromRoute] int id) 
+        public IActionResult DeleteConfirmed([FromRoute] int id)
         {
             var result = _memberService.RemoveMember(id);
             if (result)
@@ -121,4 +122,5 @@ namespace GymManagementPL.Controllers
                 TempData["ErrorMessage"] = "Failed to delete member!";
             return RedirectToAction(nameof(Index));
         }
+    }
 }
