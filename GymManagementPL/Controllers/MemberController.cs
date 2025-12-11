@@ -94,6 +94,7 @@ namespace GymManagementPL.Controllers
 
         }
 
+      
         public IActionResult Delete([FromRoute] int id)
         {
             if (id <= 0)
