@@ -1,4 +1,5 @@
-﻿using GymManagementBLL.Services.Interfaces;
+﻿using GymManagementBLL.Services.Classes;
+using GymManagementBLL.Services.Interfaces;
 using GymManagementBLL.ViewModels.SessionViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -49,6 +50,22 @@ namespace GymManagementPL.Controllers
                 LoadTrainersDropDown();
                 return View(input);
             }
+        }
+
+        public IActionResult Details(int id)
+        {
+            if (id <= 0)
+            {
+                TempData["ErrorMessage"] = "Invalid session ID.";
+                return RedirectToAction(nameof(Index));
+            }
+            var session = _sessionService.GetSessionById(id);
+            if (session == null)
+            {
+                TempData["ErrorMessage"] = "Session not found.";
+                return RedirectToAction(nameof(Index));
+            }
+            return View(session);
         }
 
         #region Helper Methods
