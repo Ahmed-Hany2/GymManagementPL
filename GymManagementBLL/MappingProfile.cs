@@ -25,6 +25,9 @@ namespace GymManagementBLL
 
             CreateMap<CreateSessionViewModel, Session>();
             CreateMap<UpdateSessionViewModel, Session>().ReverseMap();
+
+            CreateMap<Category, CategorySelectViewModel>();
+            CreateMap<Trainer, TrainerSelectViewModel>();
         }
     }
 }

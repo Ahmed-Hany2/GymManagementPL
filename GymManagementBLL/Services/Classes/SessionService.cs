@@ -101,6 +101,18 @@ namespace GymManagementBLL.Services.Classes
            return _mapper.Map<UpdateSessionViewModel>(session);
         }
 
+        public IEnumerable<CategorySelectViewModel> GetCategoriesDropDown()
+        {
+            var categories = _unitOfWork.GetRepository<Category>().GetAll();
+            return _mapper.Map< IEnumerable<CategorySelectViewModel> >(categories);
+        }
+
+        public IEnumerable<TrainerSelectViewModel> GetTrainersDropDown()
+        {
+            var trainers = _unitOfWork.GetRepository<Trainer>().GetAll();
+            return _mapper.Map<IEnumerable<TrainerSelectViewModel>>(trainers);
+        }
+
         #region Helper Methods
 
         private bool IsTrainerExists(int trainerId)
@@ -144,6 +156,8 @@ namespace GymManagementBLL.Services.Classes
 
             return true;
         }
+
+        
 
         #endregion
     }
