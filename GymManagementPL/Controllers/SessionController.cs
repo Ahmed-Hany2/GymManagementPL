@@ -1,5 +1,6 @@
 ﻿using GymManagementBLL.Services.Classes;
 using GymManagementBLL.Services.Interfaces;
+using GymManagementBLL.ViewModels.PlanViewModels;
 using GymManagementBLL.ViewModels.SessionViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -66,6 +67,41 @@ namespace GymManagementPL.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(session);
+        }
+
+        public IActionResult Edit(int id)
+        {
+            if (id <= 0)
+            {
+                TempData["ErrorMessage"] = "Invalid session ID.";
+                return RedirectToAction(nameof(Index));
+            }
+            var session = _sessionService.GetSessionToUpdate(id);
+            if (session == null)
+            {
+                TempData["ErrorMessage"] = "session not found.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            LoadTrainersDropDown();
+            return View(session);
+        }
+
+        [HttpPost]
+        public IActionResult Edit([FromRoute]int id, UpdateSessionViewModel input)
+        {
+            if (!ModelState.IsValid)
+            {
+                LoadTrainersDropDown();
+                return View(input);
+            }
+            var result = _sessionService.UpdateSession(id, input);
+            if (!result)
+                TempData["ErrorMessage"] = "Failed to update Session. Please try again.";
+
+            else
+                TempData["SuccessMessage"] = "Session updated successfully.";
+            return RedirectToAction(nameof(Index));
         }
 
         #region Helper Methods

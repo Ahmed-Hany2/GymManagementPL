@@ -51,7 +51,7 @@ namespace GymManagementPL.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(int id, UpdatePlanViewModel input)
+        public IActionResult Edit([FromRoute]int id, UpdatePlanViewModel input)
         {
             if (!ModelState.IsValid)
             {

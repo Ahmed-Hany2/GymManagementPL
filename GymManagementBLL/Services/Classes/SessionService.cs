@@ -73,7 +73,10 @@ namespace GymManagementBLL.Services.Classes
                 )
                 return false;
 
-            _mapper.Map<Session>(input);
+            session.TrainerId = input.TrainerId;
+            session.StartDate = input.StartDate;
+            session.EndDate = input.EndDate;
+            session.Description = input.Description;
             session.UpdatedAt = DateTime.Now;
             _unitOfWork.GetRepository<Session>().Update(session);
             _unitOfWork.SaveChanges();
