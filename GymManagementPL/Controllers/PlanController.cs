@@ -67,5 +67,16 @@ namespace GymManagementPL.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
+        public IActionResult Activate(int id)
+        {
+            var result = _planService.ActivatePlan(id);
+            if (!result)
+                TempData["ErrorMessage"] = "Failed to activate plan. Please try again.";
+            else
+                TempData["SuccessMessage"] = "Plan activated successfully.";
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }
