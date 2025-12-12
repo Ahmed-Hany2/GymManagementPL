@@ -3,8 +3,10 @@ using GymManagementBLL.Services.Classes;
 using GymManagementBLL.Services.Interfaces;
 using GymManagementDAL.Data.Contexts;
 using GymManagementDAL.Data.DataSeed;
+using GymManagementDAL.Entities;
 using GymManagementDAL.Repositories.Classes;
 using GymManagementDAL.Repositories.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace GymManagementPL
@@ -29,7 +31,21 @@ namespace GymManagementPL
             builder.Services.AddScoped<IMemberService, MemberService>();
             builder.Services.AddScoped<IplanService, PlanService>();
             builder.Services.AddScoped<ISessionService, SessionService>();
-           
+
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequiredLength = 6;
+                options.Password.RequireLowercase = true;
+            }).AddEntityFrameworkStores<GymDbContext>();
+
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/Login";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+            });
+
+
+
             builder.Services.AddAutoMapper( x=> x.AddProfile( new MappingProfile() ) );
 
             var app = builder.Build();

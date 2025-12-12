@@ -1,4 +1,6 @@
 ﻿using GymManagementDAL.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace GymManagementDAL.Data.Contexts
 {
-    public class GymDbContext : DbContext
+    public class GymDbContext : IdentityDbContext<ApplicationUser>
     {
         
         public GymDbContext(DbContextOptions<GymDbContext> options)
@@ -24,7 +26,20 @@ namespace GymManagementDAL.Data.Contexts
             .WithMany(s => s.SessionMembers)
             .HasForeignKey(b => b.SessionId)
             .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ApplicationUser>(au =>
+            {
+                au.Property(x => x.FirstName)
+                .HasColumnType("varchar")
+                    .HasMaxLength(50);
+
+                au.Property(x => x.LastName)
+                .HasColumnType("varchar")
+                    .HasMaxLength(50);
+            });
         }
+
+        
 
         #region DbSets
 
