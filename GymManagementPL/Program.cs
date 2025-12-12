@@ -55,7 +55,12 @@ namespace GymManagementPL
             using var scope = app.Services.CreateScope();
             var gymDbContext = scope.ServiceProvider.GetRequiredService<GymDbContext>();
 
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
             GymDataSeeding.SeedData(gymDbContext); 
+
+            IdentityDataSeeding.SeedData(roleManager, userManager);
             #endregion
 
             // Configure the HTTP request pipelines.
