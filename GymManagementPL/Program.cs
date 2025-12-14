@@ -31,6 +31,7 @@ namespace GymManagementPL
             builder.Services.AddScoped<IMemberService, MemberService>();
             builder.Services.AddScoped<IplanService, PlanService>();
             builder.Services.AddScoped<ISessionService, SessionService>();
+            builder.Services.AddScoped<IAccountService, AccountService>();
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
@@ -72,6 +73,7 @@ namespace GymManagementPL
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
             app.UseRouting();
 
             app.UseAuthentication();
@@ -81,7 +83,7 @@ namespace GymManagementPL
             app.MapStaticAssets();
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}")
+                pattern: "{controller=Account}/{action=Login}/{id?}")
                 .WithStaticAssets();
 
             app.Run();

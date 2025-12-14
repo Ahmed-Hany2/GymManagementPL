@@ -36,10 +36,12 @@
                         <li class="nav-item">
                             <a class="nav-link active px-3 py-2 mx-2 fw-bolder fs-5" aria-current="page" href="#">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link  px-3 py-2 mx-2 fw-bolder fs-5" aria-current="page" href="#">Members</a>
-                        </li>
-                        <li class="nav-item">
+                            @if (User.IsInRole("SuperAdmin")) {
+                                <li class="nav-item">
+                                    <a class="nav-link  px-3 py-2 mx-2 fw-bolder fs-5" aria-current="page" href="#">Members</a>
+                                </li>
+                            }
+                            <li class="nav-item">
                             <a class="nav-link  px-3 py-2 mx-2 fw-bolder fs-5" aria-current="page" href="#">Trainers</a>
                         </li>
                         <li class="nav-item">
